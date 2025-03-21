@@ -8,19 +8,32 @@
 </head>
 <body>
     <div id="container">
-        <div id="card-selection">
-            <h2>Select a Card:</h2>
-            <form id="card-form"></form>
-        </div>
-        <div id="number-selection">
-            <h2>Select a Number:</h2>
-            <form id="number-form"></form>
-        </div>
-        <div id="result">
-            <h2>Result:</h2>
-            <p id="result-text"></p>
-        </div>
+        <button id="select-method-btn">Select a Method</button>
+        <button id="select-card-btn">Select a Random Card</button>
+        <p id="method-display">Method: None selected</p>
+        <p id="card-display">Card: None selected</p>
+        <p id="position-display">Position: None selected</p>
+        <p id="result-display">Result: None</p>
     </div>
+
+    <dialog id="method-dialog">
+        <h2>Select a Method:</h2>
+        <form id="method-form"></form>
+        <button id="method-close-btn">Close</button>
+    </dialog>
+
+    <dialog id="card-dialog">
+        <h2>Select a Card:</h2>
+        <form id="card-form"></form>
+        <button id="card-close-btn">Close</button>
+    </dialog>
+
+    <dialog id="position-dialog">
+        <h2>Select a Position:</h2>
+        <form id="position-form"></form>
+        <button id="position-close-btn">Close</button>
+    </dialog>
+
     <script src="script.js"></script>
 </body>
 </html>
