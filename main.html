@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Selection Program</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+        }
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #main-buttons {
+            text-align: center;
+        }
+        #selection-results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 80%;
+            max-width: 400px;
+        }
+        label {
+            display: block;
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        .close-modal {
+            margin-top: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .close-modal:hover {
+            background-color: #c0392b;
+        }
+        /* Mobile adjustments */
+        @media (max-width: 600px) {
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+            label {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="main-buttons">
+        <button id="select-method">Select a Method</button>
+        <button id="select-card">Select a Random Card</button>
+    </div>
+    <div id="selection-results">
+        <p>Please select a card and position.</p>
+    </div>
+
+    <!-- Stack Selection Modal -->
+    <div id="stack-modal" class="modal">
+        <div class="modal-content">
+            <h2>Select a Stack</h2>
+            <form id="stack-form"></form>
+            <button class="close-modal">Close</button>
+        </div>
+    </div>
+
+    <!-- Card Selection Modal -->
+    <div id="card-modal" class="modal">
+        <div class="modal-content">
+            <h2>Select a Card</h2>
+            <form id="card-form"></form>
+            <button class="close-modal">Close</button>
+        </div>
+    </div>
+
+    <!-- Position Selection Modal -->
+    <div id="position-modal" class="modal">
+        <div class="modal-content">
+            <h2>Select a Position</h2>
+            <form id="position-form"></form>
+            <button class="close-modal">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Define the stacks (example with one stack; add more as needed)
+        const stacks = [
+            {
+                myArray1: [
+                    "TS", "5H", "2D", "KD", "7D", "8C", "3S", "AD", "7S", "5S",
+                    "QD", "AH", "8S", "3D", "7H", "QH", "5D", "7C", "4H", "KH",
+                    "4D", "TD", "JC", "JH", "TC", "JD", "4S", "TH", "6H", "3C",
+                    "2S", "9H"
+                ],
+                my2DArray: [
+                    ["11.T00", "12.NP", "13.NP", "14.NP", "15.NP", "16.NP", "17.NP", "18.NP", "19.NP", "20.NP", "21.NP", "22.B20", "23.B19", "24.B18", "25.B17", "26.B16", "27.B15", "28.B14", "29.B13", "30.B12", "31.B11", "32.B10", "33.B09", "34.B08", "35.B07", "36.B06", "37.B05", "38.B04", "39.B03", "40.B02", "41.B01", "42.B00"],
+                    ["11.NP", "12.T00", "13.NP", "14.NP", "15.NP", "16.NP", "17.NP", "18.NP", "19.NP", "20.NP", "21.NP", "22.NP", "23.NP", "24.NP", "25.NP", "26.NP", "27.NP", "28.NP", "29.NP", "30.NP", "31.NP", "32.NP", "33.NP", "34.NP", "35.NP", "36.NP", "37.NP", "38.NP", "39.NP", "40.NP", "41.NP", "42.NP"],
+                    // Add remaining rows as per your my2DArray (32 rows total)
+                    // For brevity, only two rows are shown; assume all 32 cards have similar data
+                ]
+            }
+            // Add additional stacks here if needed, e.g., stacks.push({...})
+        ];
+
+        let currentStackIndex = 0;
+        let selectedCardIndex;
+        let selectedPosition;
+
+        // Generate stack radios
+        function generateStackRadios() {
+            const stackForm = document.getElementById('stack-form');
+            stackForm.innerHTML = '';
+            stacks.forEach((stack, index) => {
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'stack';
+                radio.value = index;
+                radio.id = `stack-${index}`;
+                const label = document.createElement('label');
+                label.htmlFor = `stack-${index}`;
+                label.textContent = `Stack ${index + 1}`;
+                stackForm.appendChild(radio);
+                stackForm.appendChild(label);
+                stackForm.appendChild(document.createElement('br'));
+                radio.addEventListener('change', function() {
+                    currentStackIndex = parseInt(this.value);
+                    document.getElementById('stack-modal').style.display = 'none';
+                });
+            });
+        }
+
+        // Generate card radios based on current stack
+        function generateCardRadios() {
+            const cardForm = document.getElementById('card-form');
+            cardForm.innerHTML = '';
+            const myArray1 = stacks[currentStackIndex].myArray1;
+            myArray1.forEach((card, index) => {
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'card';
+                radio.value = index;
+                radio.id = `card-${index}`;
+                const label = document.createElement('label');
+                label.htmlFor = `card-${index}`;
+                label.textContent = cardToName(card);
+                cardForm.appendChild(radio);
+                cardForm.appendChild(label);
+                cardForm.appendChild(document.createElement('br'));
+                radio.addEventListener('change', function() {
+                    selectedCardIndex = parseInt(this.value);
+                    document.getElementById('card-modal').style.display = 'none';
+                    generatePositionRadios();
+                    document.getElementById('position-modal').style.display = 'block';
+                });
+            });
+        }
+
+        // Generate position radios based on selected card
+        function generatePositionRadios() {
+            const positionForm = document.getElementById('position-form');
+            positionForm.innerHTML = '';
+            const row = stacks[currentStackIndex].my2DArray[selectedCardIndex] || [];
+            const availablePositions = [];
+            for (let pos = 11; pos <= 42; pos++) {
+                const idx = pos - 11;
+                if (row[idx] && !row[idx].endsWith('.NP')) {
+                    availablePositions.push(pos);
+                }
+            }
+            shuffle(availablePositions); // Randomize position order
+            availablePositions.forEach(pos => {
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'position';
+                radio.value = pos;
+                radio.id = `position-${pos}`;
+                const label = document.createElement('label');
+                label.htmlFor = `position-${pos}`;
+                label.textContent = pos;
+                positionForm.appendChild(radio);
+                positionForm.appendChild(label);
+                positionForm.appendChild(document.createElement('br'));
+                radio.addEventListener('change', function() {
+                    selectedPosition = parseInt(this.value);
+                    displayResult();
+                    document.getElementById('position-modal').style.display = 'none';
+                });
+            });
+        }
+
+        // Display the result on the main screen
+        function displayResult() {
+            const my2DArray = stacks[currentStackIndex].my2DArray;
+            const item = my2DArray[selectedCardIndex][selectedPosition - 11];
+            const parts = item.split('.');
+            const code = parts[1]; // e.g., "T05" or "B12"
+            let prefix = code[0];
+            let xx = code.slice(1);
+            if (xx.length === 1) xx = '0' + xx; // Ensure two digits
+            let percentage = (prefix === 'T' ? '1.' : '2.') + xx;
+            const cardName = cardToName(stacks[currentStackIndex].myArray1[selectedCardIndex]);
+            const resultText = `
+                <p>Remember that you have selected the ${cardName}.</p>
+                <p>Remember that you have selected position number ${selectedPosition}.</p>
+                <p>Percent this position named for the card: ${percentage} %</p>
+            `;
+            document.getElementById('selection-results').innerHTML = resultText;
+        }
+
+        // Convert card code to full name
+        function cardToName(card) {
+            const rankMap = { 'T': '10', 'J': 'Jack', 'Q': 'Queen', 'K': 'King', 'A': 'Ace' };
+            const suitMap = { 'S': 'Spades', 'H': 'Hearts', 'D': 'Diamonds', 'C': 'Clubs' };
+            const rank = card[0];
+            const suit = card[1];
+            const rankName = rankMap[rank] || rank;
+            const suitName = suitMap[suit];
+            return `${rankName} of ${suitName}`;
+        }
+
+        // Fisher-Yates shuffle
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Event listeners for buttons
+        document.getElementById('select-method').addEventListener('click', function() {
+            generateStackRadios();
+            document.getElementById('stack-modal').style.display = 'block';
+        });
+
+        document.getElementById('select-card').addEventListener('click', function() {
+            generateCardRadios();
+            document.getElementById('card-modal').style.display = 'block';
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        });
+
+        // Close modals with close buttons
+        document.querySelectorAll('.close-modal').forEach(button => {
+            button.addEventListener('click', function() {
+                this.closest('.modal').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
