@@ -114,28 +114,43 @@ document.getElementById('select-method-btn').addEventListener('click', function(
     const methodForm = document.getElementById('method-form');
     methodForm.innerHTML = '';
     methods.forEach((method, index) => {
-        const radio = document.createElement('input');
-        radio.type = 'radio';
-        radio.name = 'method';
-        radio.value = index;
-        radio.id = `method-${index}`;
-        const label = document.createElement('label');
-        label.htmlFor = `method-${index}`;
-        label.textContent = method.name;
-        methodForm.appendChild(radio);
-        methodForm.appendChild(label);
-        methodForm.appendChild(document.createElement('br'));
-        radio.addEventListener('change', function() {
-            currentMethod = methods[index];
-            document.getElementById('method-display').textContent = `Method: ${currentMethod.name}`;
-            selectedCardIndex = null;
-            selectedPosition = null;
-            document.getElementById('card-display').textContent = 'Card: None selected';
-            document.getElementById('position-display').textContent = 'Position: None selected';
-            document.getElementById('result-display').textContent = 'Result: None';
-            methodDialog.close();
-        });
+    // Create a container div for each radio-label pair
+    const container = document.createElement('div');
+    container.classList.add('method-option'); // Add a class for styling
+
+    // Create the radio button
+    const radio = document.createElement('input');
+    radio.type = 'radio';
+    radio.name = 'method';
+    radio.value = index;
+    radio.id = `method-${index}`;
+
+    // Create the label
+    const label = document.createElement('label');
+    label.htmlFor = `method-${index}`;
+    label.textContent = method.name;
+
+    // Append radio and label to the container
+    container.appendChild(radio);
+    container.appendChild(label);
+
+    // Append the container to the form
+    methodForm.appendChild(container);
+
+    // Add the change event listener
+    radio.addEventListener('change', function() {
+        currentMethod = methods[index];
+        document.getElementById('method-display').textContent = `Method: ${currentMethod.name}`;
+        selectedCardIndex = null;
+        selectedPosition = null;
+        document.getElementById('card-display').textContent = 'Card: None selected';
+        document.getElementById('position-display').textContent = 'Position: None selected';
+        document.getElementById('result-display').textContent = 'Result: None';
+        methodDialog.close();
     });
+});
+        
+    
     methodDialog.showModal();
 });
 
@@ -164,7 +179,7 @@ document.getElementById('select-card-btn').addEventListener('click', function() 
         label.textContent = cardToFullName(card);
         cardForm.appendChild(radio);
         cardForm.appendChild(label);
-        cardForm.appendChild(document.createElement('br'));
+        //cardForm.appendChild(document.createElement('br'));
         radio.addEventListener('change', function() {
             selectedCardIndex = parseInt(this.value);
             cardDialog.close();
@@ -204,7 +219,7 @@ function displayPositions() {
         label.textContent = num;
         positionForm.appendChild(radio);
         positionForm.appendChild(label);
-        positionForm.appendChild(document.createElement('br'));
+        //positionForm.appendChild(document.createElement('br'));
         radio.addEventListener('change', function() {
             selectedPosition = parseInt(this.value);
             positionDialog.close();

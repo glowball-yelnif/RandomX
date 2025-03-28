@@ -7,12 +7,19 @@ body {
 }
 
 #container {
+    width: 90%; /* Responsive width for mobile */
     max-width: 400px;
     margin: 20px auto;
     background: white;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Keep text centered */
+}
+
+.button-group {
+    text-align: left; /* Left-align buttons */
+    margin-bottom: 10px;
 }
 
 button {
@@ -27,11 +34,12 @@ p {
 }
 
 dialog {
+    width: 90%; /* Responsive width for mobile */
+    max-width: 300px;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 10px;
     background: white;
-    max-width: 300px;
     text-align: left;
 }
 
@@ -55,4 +63,14 @@ label {
 
 input[type="radio"] {
     margin-right: 5px;
+}
+.method-option {
+    display: flex;          /* Makes the radio and label align horizontally */
+    align-items: center;    /* Vertically centers the radio and label */
+    margin-bottom: 5px;     /* Optional: Adds spacing between each method option */
+}
+.position-option {
+    display: flex;          /* Aligns the radio and label horizontally */
+    align-items: center;    /* Vertically centers the radio and label */
+    margin-bottom: 5px;     /* Adds spacing between each position option */
 }
