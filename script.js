@@ -111,45 +111,56 @@ function shuffle(array) {
 // Handle "Select a Method" button
 document.getElementById('select-method-btn').addEventListener('click', function() {
     const methodDialog = document.getElementById('method-dialog');
-    const methodForm = document.getElementById('method-form');
+    const methodForm   = document.getElementById('method-form');
     methodForm.innerHTML = '';
+
+    // Figure out which index to default-check:
+    //   if no method chosen yet → 0 (Aronistic),
+    //   otherwise the index of the already-selected method.
+    const defaultIndex = currentMethod
+        ? methods.findIndex(m => m === currentMethod)
+        : 0;
+
     methods.forEach((method, index) => {
-    // Create a container div for each radio-label pair
-    const container = document.createElement('div');
-    container.classList.add('method-option'); // Add a class for styling
+        // build wrapper
+        const container = document.createElement('div');
+        container.classList.add('method-option');
 
-    // Create the radio button
-    const radio = document.createElement('input');
-    radio.type = 'radio';
-    radio.name = 'method';
-    radio.value = index;
-    radio.id = `method-${index}`;
+        // the radio
+        const radio = document.createElement('input');
+        radio.type  = 'radio';
+        radio.name  = 'method';
+        radio.value = index;
+        radio.id    = `method-${index}`;
 
-    // Create the label
-    const label = document.createElement('label');
-    label.htmlFor = `method-${index}`;
-    label.textContent = method.name;
+        // default-check logic
+        if (index === defaultIndex) {
+            radio.checked = true;
+        }
 
-    // Append radio and label to the container
-    container.appendChild(radio);
-    container.appendChild(label);
+        // the label
+        const label = document.createElement('label');
+        label.htmlFor   = radio.id;
+        label.textContent = method.name;
 
-    // Append the container to the form
-    methodForm.appendChild(container);
+        // assemble
+        container.appendChild(radio);
+        container.appendChild(label);
+        methodForm.appendChild(container);
 
-    // Add the change event listener
-    radio.addEventListener('change', function() {
-        currentMethod = methods[index];
-        document.getElementById('method-display').textContent = `Method: ${currentMethod.name}`;
-        selectedCardIndex = null;
-        selectedPosition = null;
-        document.getElementById('card-display').textContent = 'Card: None selected';
-        document.getElementById('position-display').textContent = 'Position: None selected';
-        document.getElementById('result-display').textContent = 'Result: None';
-        methodDialog.close();
+        // when the user picks one, update state & close
+        radio.addEventListener('change', function() {
+            currentMethod = methods[index];
+            document.getElementById('method-display').textContent = `Method: ${currentMethod.name}`;
+            selectedCardIndex = null;
+            selectedPosition  = null;
+            document.getElementById('card-display').textContent     = 'Card: None selected';
+            document.getElementById('position-display').textContent = 'Position: None selected';
+            document.getElementById('result-display').textContent   = 'Result: None';
+            methodDialog.close();
+        });
     });
-});
-        
+
     
     methodDialog.showModal();
 });
@@ -162,10 +173,10 @@ document.getElementById('method-close-btn').addEventListener('click', function()
 // Handle "Select a Random Card" button
 // Handle "Select a Random Card" button
 document.getElementById('select-card-btn').addEventListener('click', function() {
-    if (!currentMethod) {
-        alert('Please select a method first.');
-        return;
-    }
+ //   if (!currentMethod) {
+       // alert('Please select a method first.');
+      //  return;
+   // }
     const cardDialog = document.getElementById('card-dialog');
     const cardForm = document.getElementById('card-form');
     cardForm.innerHTML = '';
@@ -284,5 +295,5 @@ function updateDisplays() {
         resultLabel = 'Unknown';
         percentage = 'N/A';
     }
-    document.getElementById('result-display').innerHTML = `Result: <span style="font-size: large;">${resultLabel}</span>, Percent this position named for the card: `;
+    document.getElementById('result-display').innerHTML = `Result: <span style="font-size: large;">${resultLabel}</span> percent this position named for the card `;
 }
