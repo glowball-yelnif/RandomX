@@ -160,6 +160,7 @@ document.getElementById('method-close-btn').addEventListener('click', function()
 });
 
 // Handle "Select a Random Card" button
+// Handle "Select a Random Card" button
 document.getElementById('select-card-btn').addEventListener('click', function() {
     if (!currentMethod) {
         alert('Please select a method first.');
@@ -168,24 +169,36 @@ document.getElementById('select-card-btn').addEventListener('click', function() 
     const cardDialog = document.getElementById('card-dialog');
     const cardForm = document.getElementById('card-form');
     cardForm.innerHTML = '';
+
     currentMethod.cards.forEach((card, index) => {
+        // create wrapper div
+        const container = document.createElement('div');
+        container.classList.add('card-option');
+
+        // radio
         const radio = document.createElement('input');
         radio.type = 'radio';
         radio.name = 'card';
         radio.value = index;
         radio.id = `card-${index}`;
+
+        // label
         const label = document.createElement('label');
         label.htmlFor = `card-${index}`;
         label.textContent = cardToFullName(card);
-        cardForm.appendChild(radio);
-        cardForm.appendChild(label);
-        //cardForm.appendChild(document.createElement('br'));
+
+        // assemble
+        container.appendChild(radio);
+        container.appendChild(label);
+        cardForm.appendChild(container);
+
         radio.addEventListener('change', function() {
-            selectedCardIndex = parseInt(this.value);
+            selectedCardIndex = parseInt(this.value, 10);
             cardDialog.close();
             displayPositions();
         });
     });
+
     cardDialog.showModal();
 });
 
@@ -199,33 +212,48 @@ function displayPositions() {
     const positionDialog = document.getElementById('position-dialog');
     const positionForm = document.getElementById('position-form');
     positionForm.innerHTML = '';
+
+    // get the row for the selected card
     const row = currentMethod.data[selectedCardIndex];
+
+    // extract all valid position numbers
     const numbers = [];
     row.forEach(item => {
         const parts = item.split('.');
         if (parts[1] !== 'NP') {
-            numbers.push(parseInt(parts[0]));
+            numbers.push(parseInt(parts[0], 10));
         }
     });
+
+    // shuffle before displaying
     shuffle(numbers);
+
+    // build each radio+label inside a flex container
     numbers.forEach(num => {
+        const container = document.createElement('div');
+        container.classList.add('position-option');
+
         const radio = document.createElement('input');
         radio.type = 'radio';
         radio.name = 'position';
         radio.value = num;
         radio.id = `position-${num}`;
+
         const label = document.createElement('label');
         label.htmlFor = `position-${num}`;
         label.textContent = num;
-        positionForm.appendChild(radio);
-        positionForm.appendChild(label);
-        //positionForm.appendChild(document.createElement('br'));
+
+        container.appendChild(radio);
+        container.appendChild(label);
+        positionForm.appendChild(container);
+
         radio.addEventListener('change', function() {
-            selectedPosition = parseInt(this.value);
+            selectedPosition = parseInt(this.value, 10);
             positionDialog.close();
             updateDisplays();
         });
     });
+
     positionDialog.showModal();
 }
 

@@ -74,3 +74,13 @@ input[type="radio"] {
     align-items: center;    /* Vertically centers the radio and label */
     margin-bottom: 5px;     /* Adds spacing between each position option */
 }
+.card-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.position-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
